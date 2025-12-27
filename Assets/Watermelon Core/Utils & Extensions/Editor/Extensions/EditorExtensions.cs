@@ -299,7 +299,11 @@ namespace Watermelon
                     property.boundsValue = new Bounds(Vector3.zero, Vector3.zero);
                     break;
                 case SerializedPropertyType.Gradient:
-                    property.gradientValue = new Gradient();
+                    PropertyInfo gradientPropertyInfo = typeof(SerializedProperty).GetProperty("gradientValue", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (gradientPropertyInfo != null)
+                    {
+                        gradientPropertyInfo.SetValue(property, new Gradient());
+                    }
                     break;
                 case SerializedPropertyType.Quaternion:
                     property.quaternionValue = Quaternion.identity;

@@ -26,12 +26,11 @@ namespace Watermelon
 
             if (setFrameRateAutomatically)
             {
-                uint numerator = Screen.currentResolution.refreshRateRatio.numerator;
-                uint denominator = Screen.currentResolution.refreshRateRatio.denominator;
+                int refreshRate = Screen.currentResolution.refreshRate;
 
-                if (numerator != 0 && denominator != 0)
+                if (refreshRate > 0)
                 {
-                    Application.targetFrameRate = Mathf.RoundToInt(numerator / denominator);
+                    Application.targetFrameRate = refreshRate;
                 }
                 else
                 {

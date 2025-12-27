@@ -104,14 +104,11 @@ namespace Watermelon
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
 
-                SpriteAtlasImporter spriteAtlasImporter = (SpriteAtlasImporter)SpriteAtlasImporter.GetAtPath(filePath);
-                spriteAtlasImporter.packingSettings = new SpriteAtlasPackingSettings()
-                {
-                    enableTightPacking = false,
-                    enableAlphaDilation = true
-                };
-
-                spriteAtlasImporter.SaveAndReimport();
+                SpriteAtlas spriteAtlas = AssetDatabase.LoadAssetAtPath<SpriteAtlas>(filePath);
+                SpriteAtlasPackingSettings packingSettings = spriteAtlas.GetPackingSettings();
+                packingSettings.enableTightPacking = false;
+                packingSettings.enableAlphaDilation = true;
+                spriteAtlas.SetPackingSettings(packingSettings);
 
                 AssetDatabase.Refresh();
             }

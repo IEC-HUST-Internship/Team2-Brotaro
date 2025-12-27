@@ -28,13 +28,16 @@ namespace Watermelon
         {
             if (serializedProperty.propertyType == SerializedPropertyType.Generic)
             {
-                Type targetType = serializedProperty.boxedValue.GetType();
-                IEnumerable<FieldInfo> fieldInfos = targetType.GetFields(ReflectionUtils.FLAGS_INSTANCE).Where(x => x.GetCustomAttribute<LevelEditorSetting>() != null);
-                foreach (var field in fieldInfos)
+                Type targetType = serializedProperty.managedReferenceValue?.GetType();
+                if (targetType != null)
                 {
-                    SerializedProperty subProperty = serializedProperty.FindPropertyRelative(field.Name);
-                    if (subProperty != null)
-                        yield return subProperty;
+                    IEnumerable<FieldInfo> fieldInfos = targetType.GetFields(ReflectionUtils.FLAGS_INSTANCE).Where(x => x.GetCustomAttribute<LevelEditorSetting>() != null);
+                    foreach (var field in fieldInfos)
+                    {
+                        SerializedProperty subProperty = serializedProperty.FindPropertyRelative(field.Name);
+                        if (subProperty != null)
+                            yield return subProperty;
+                    }
                 }
             }
         }
@@ -57,13 +60,16 @@ namespace Watermelon
         {
             if (serializedProperty.propertyType == SerializedPropertyType.Generic)
             {
-                Type targetType = serializedProperty.boxedValue.GetType();
-                IEnumerable<FieldInfo> fieldInfos = targetType.GetFields(ReflectionUtils.FLAGS_INSTANCE).Where(x => x.GetCustomAttribute<LevelEditorSetting>() == null);
-                foreach (var field in fieldInfos)
+                Type targetType = serializedProperty.managedReferenceValue?.GetType();
+                if (targetType != null)
                 {
-                    SerializedProperty subProperty = serializedProperty.FindPropertyRelative(field.Name);
-                    if (subProperty != null)
-                        yield return subProperty;
+                    IEnumerable<FieldInfo> fieldInfos = targetType.GetFields(ReflectionUtils.FLAGS_INSTANCE).Where(x => x.GetCustomAttribute<LevelEditorSetting>() == null);
+                    foreach (var field in fieldInfos)
+                    {
+                        SerializedProperty subProperty = serializedProperty.FindPropertyRelative(field.Name);
+                        if (subProperty != null)
+                            yield return subProperty;
+                    }
                 }
             }
         }

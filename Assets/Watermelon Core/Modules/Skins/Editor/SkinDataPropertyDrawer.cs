@@ -106,7 +106,8 @@ namespace Watermelon
                     property.FindPropertyRelative("id")
                 };
 
-                System.Type targetType = property.boxedValue.GetType();
+                Object targetObject = property.serializedObject.targetObject;
+                System.Type targetType = targetObject.GetType();
                 IEnumerable<FieldInfo> fieldInfos = targetType.GetFields(ReflectionUtils.FLAGS_INSTANCE);
 
                 foreach (var field in fieldInfos)

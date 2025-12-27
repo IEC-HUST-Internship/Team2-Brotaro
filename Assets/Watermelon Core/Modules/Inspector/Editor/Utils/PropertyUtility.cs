@@ -154,7 +154,7 @@ namespace Watermelon
         {
             if (serializedProperty.propertyType == SerializedPropertyType.Generic)
             {
-                Type targetType = serializedProperty.boxedValue.GetType();
+                Type targetType = serializedProperty.managedReferenceValue?.GetType();
                 IEnumerable<FieldInfo> fieldInfos = targetType.GetFields(ReflectionUtils.FLAGS_INSTANCE).Where(x => x.CompareGroupID(groupName));
                 foreach (var field in fieldInfos)
                 {
@@ -169,7 +169,7 @@ namespace Watermelon
         {
             if (serializedProperty.propertyType == SerializedPropertyType.Generic)
             {
-                Type targetType = serializedProperty.boxedValue.GetType();
+                Type targetType = serializedProperty.managedReferenceValue?.GetType();
                 IEnumerable<FieldInfo> fieldInfos = targetType.GetFields(ReflectionUtils.FLAGS_INSTANCE).Where(x => x.GetCustomAttribute<GroupAttribute>() == null);
                 foreach (var field in fieldInfos)
                 {
