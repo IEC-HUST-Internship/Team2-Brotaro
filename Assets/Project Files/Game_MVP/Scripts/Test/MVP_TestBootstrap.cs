@@ -11,7 +11,7 @@ namespace SquadShooterMVP
 
         [Header("Scene References")]
         [SerializeField] private InputService _inputService; 
-        [SerializeField] private MVPCameraController _cameraController;
+        [SerializeField] private MVP_CamControl _cameraController;
         
         // Private reference to the live player
         private CharacterPresenter _activePlayer;

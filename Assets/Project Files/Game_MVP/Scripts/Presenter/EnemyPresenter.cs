@@ -15,7 +15,7 @@ namespace SquadShooterMVP
         protected override void HandleMovement()
         {
             if (_target == null) return;
-            if(Vector3.Distance(transform.position, _target.position) < 0.5f)
+            if(Vector3.Distance(transform.position, _target.position) < 0.1f)
             {
                 _movementView.Stop();
                 return;

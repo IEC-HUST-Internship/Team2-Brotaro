@@ -56,10 +56,14 @@ namespace SquadShooterMVP
         protected abstract void HandleMovement();
         protected abstract void HandleShooting();
 
-        protected virtual void Update()
+        protected virtual void FixedUpdate()
         {
             if (_model == null || _model.IsDead.Value) return;
             HandleMovement();
+        }
+        protected virtual void Update()
+        {
+            if (_model == null || _model.IsDead.Value) return;
             HandleShooting();
         }
     }

@@ -22,8 +22,8 @@ namespace SquadShooterMVP
         }
         public UnitModel()
         {
-        Health.Value = 100; 
-        IsDead.Value = false;
+            Health.Value = 100; 
+            IsDead.Value = false;
         }
     }
 }

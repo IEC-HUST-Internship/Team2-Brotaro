@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SquadShooterMVP
 {
-    public class MVPCameraController : MonoBehaviour
+    public class MVP_CamControl : MonoBehaviour
     {
         [Header("Settings")]
         [SerializeField] private Vector3 _offset = new Vector3(0, 15, -10); // High up and back

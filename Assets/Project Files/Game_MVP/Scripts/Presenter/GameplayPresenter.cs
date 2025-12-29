@@ -3,14 +3,14 @@ using System;
 
 namespace SquadShooterMVP
 {
-    public class GameplayManager : MonoBehaviour
+    public class GameplayPresenter : MonoBehaviour
     {
         [Header("Dependencies")]
         [SerializeField] private CharacterPresenter _player;
         [SerializeField] private WavePresenter _wavePresenter;
         [SerializeField] private InputService _inputService; 
 
-        [SerializeField] private MVPCameraController _camera; 
+        [SerializeField] private MVP_CamControl _camera; 
         
         [Header("Config")]
         [SerializeField] private LevelData _level;

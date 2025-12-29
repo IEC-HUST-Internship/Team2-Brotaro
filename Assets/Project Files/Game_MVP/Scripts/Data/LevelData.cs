@@ -14,6 +14,7 @@ namespace SquadShooterMVP
     [System.Serializable]
     public class WaveConfig
     {
+        public float WaveTimer = 60f;
         public int EnemyCount = 5;
         public float SpawnInterval = 1.5f;
         public GameObject EnemyPrefab;
