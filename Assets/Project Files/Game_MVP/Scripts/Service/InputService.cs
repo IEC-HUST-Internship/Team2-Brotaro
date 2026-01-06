@@ -1,32 +1,31 @@
-using System;
 using UnityEngine;
-// 1. Add this namespace to use the New Input System
 using UnityEngine.InputSystem; 
 
-namespace SquadShooterMVP
+public class InputService : MonoBehaviour
 {
-    public class InputService : MonoBehaviour
+    [SerializeField] private LigmaStick _joystick; 
+
+    public Vector2 JoystickInput
     {
-        public Func<Vector2> MovementProvider { get; set; }
-        public Vector2 Movement => MovementProvider != null ? MovementProvider() : Vector2.zero;
-    private void Awake()
+        get
         {
-            if (Application.isMobilePlatform)
+            if (_joystick != null)
             {
-                var joystick = FindObjectOfType<UIJoystick>();
-                
-                if (joystick != null)
-                {
-                    MovementProvider = joystick.GetJoystickInput;
-                }
+                Vector2 joyInput = _joystick.GetJoystickInput();
+                if (joyInput != Vector2.zero) return joyInput;
             }
-            else
+
+            Vector2 keyInput = Vector2.zero;
+            
+            if (Keyboard.current != null)
             {
-                MovementProvider = KeyboardInput.GetArrows;
-                
-                var joystick = FindObjectOfType<UIJoystick>();
-                if (joystick != null) joystick.gameObject.SetActive(false);
+                if (Keyboard.current.aKey.isPressed || Keyboard.current.leftArrowKey.isPressed) keyInput.x -= 1;
+                if (Keyboard.current.dKey.isPressed || Keyboard.current.rightArrowKey.isPressed) keyInput.x += 1;
+                if (Keyboard.current.wKey.isPressed || Keyboard.current.upArrowKey.isPressed) keyInput.y += 1;
+                if (Keyboard.current.sKey.isPressed || Keyboard.current.downArrowKey.isPressed) keyInput.y -= 1;
             }
+
+            return keyInput.normalized;
         }
     }
 }

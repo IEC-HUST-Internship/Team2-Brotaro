@@ -1,7 +1,6 @@
 using UnityEngine;
 
-namespace SquadShooterMVP
-{
+
     public class MVP_CamControl : MonoBehaviour
     {
         [Header("Settings")]
@@ -35,4 +34,3 @@ namespace SquadShooterMVP
             transform.LookAt(_target);
         }
     }
-}

@@ -1,8 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SquadShooterMVP
-{
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
     public class AimRingView : MonoBehaviour
     {
@@ -49,9 +47,11 @@ namespace SquadShooterMVP
         {
             if (_targetToFollow == null) 
             {
-                Destroy(gameObject);
+                if(meshRenderer.enabled) Toggle(false);
                 return;
             }
+
+            if(!meshRenderer.enabled) Toggle(true);
 
             transform.position = new Vector3(_targetToFollow.position.x, 0.1f, _targetToFollow.position.z);
             transform.Rotate(Vector3.up, rotationSpeed * Time.deltaTime);
@@ -108,4 +108,3 @@ namespace SquadShooterMVP
             return new Vector3(Mathf.Cos(angle) * r, 0, Mathf.Sin(angle) * r);
         }
     }
-}

@@ -1,63 +1,131 @@
 using UnityEngine;
-using System;
+using UnityEngine.UI;
+using TMPro; 
 
-namespace SquadShooterMVP
+public class GameplayPresenter : MonoBehaviour
 {
-    public class GameplayPresenter : MonoBehaviour
+    [Header("Setup")]
+    [SerializeField] private UnitView _playerPrefab;
+    [SerializeField] private Transform _spawnPoint;
+    [SerializeField] private InputService _inputService;
+
+    [Header("UI")]
+    [SerializeField] private Slider _hpSlider;
+    [SerializeField] private Slider _expSlider;
+    [SerializeField] private TextMeshProUGUI _levelText;
+    [SerializeField] private TextMeshProUGUI _timerText;
+    [SerializeField] private Slider _progressionBar; 
+    
+    [Header("Popups")]
+    [SerializeField] private GameObject _settingsPopup;
+    [SerializeField] private GameObject _statusPopup;
+    [Header("Level System")]
+    [SerializeField] private WavePresenter _wavePresenter; 
+    [SerializeField] private LevelData_Brotaro _levelData;        
+
+    private PlayerPresenter _playerPresenter;
+    private float _timer;
+    private float _bossProgress;
+    private bool _isPaused;
+
+    private void Start()
     {
-        [Header("Dependencies")]
-        [SerializeField] private CharacterPresenter _player;
-        [SerializeField] private WavePresenter _wavePresenter;
-        [SerializeField] private InputService _inputService; 
+        // 1. Tạo Data
+        var playerModel = new UnitModel(speed: 5f, hp: 100, dmg: 10);
 
-        [SerializeField] private MVP_CamControl _camera; 
-        
-        [Header("Config")]
-        [SerializeField] private LevelData _level;
+        // 2. Tạo Visual
+        var playerObj = Instantiate(_playerPrefab, _spawnPoint.position, Quaternion.identity);
 
-        public event Action OnGameWin;
-        public event Action OnGameLose;
+        // 3. Gắn Logic
+        _playerPresenter = playerObj.GetComponent<PlayerPresenter>();
 
-        private void Start()
+        // 4. Kết nối (Inject Dependency)
+        _playerPresenter.Init(
+            playerModel, 
+            playerObj, 
+            _inputService,
+            UpdateHpUI, 
+            UpdateExpUI, 
+            UpdateLevelUI
+        );
+        var camScript = FindObjectOfType<MVP_CamControl>();
+        if (camScript != null)
         {
-            UnitModel playerModel = new UnitModel();
-            _player.Init(playerModel, _inputService);
-
-            if (_camera != null)
-            {
-                _camera.SetTarget(_player.transform);
-            }
-
-            playerModel.IsDead.Subscribe((isDead) =>
-            {
-                if (isDead) GameOver(false); 
-            });
-
-            _wavePresenter.OnLevelCleared += () => 
-            {
-                GameOver(true); 
-            };
-
-            if (_level != null)
-            {
-                _wavePresenter.Init(_level);
-            }
+            camScript.SetTarget(playerObj.transform);
         }
-
-        private void GameOver(bool playerWon)
+        else
         {
-            _inputService.enabled = false;
-
-            if (playerWon)
-            {
-                OnGameWin?.Invoke();
-                Debug.Log("Player Win!");
-            }
-            else
-            {
-                OnGameLose?.Invoke();
-                Debug.Log("Player Lose!");
-            }
+            Debug.LogWarning("Không tìm thấy script Camera Control trong Scene!");
         }
+        _isPaused = false;
+        if(_settingsPopup) _settingsPopup.SetActive(false);
+        if(_statusPopup) _statusPopup.SetActive(false);
+
+        if(_wavePresenter != null && _levelData != null)
+        {
+            _wavePresenter.Init(_levelData);
+        }
+        else
+        {
+            Debug.LogWarning("WavePresenter hoặc LevelData chưa được gán trong Inspector!");
+        }
+    }
+
+    private void Update()
+    {
+        if (_isPaused) return;
+
+        if (_playerPresenter) _playerPresenter.Tick();
+
+        HandleGameTimer();
+        HandleProgression();
+    }
+
+    // --- UI Update Helpers ---
+    private void UpdateHpUI(float cur, float max) 
+    {
+        if (_hpSlider) _hpSlider.value = cur / max;
+    }
+
+    private void UpdateExpUI(float cur, float max) 
+    {
+        if (_expSlider) _expSlider.value = cur / max;
+    }
+
+    private void UpdateLevelUI(int lvl) 
+    {
+        if (_levelText) _levelText.text = lvl.ToString();
+    }
+
+    private void HandleGameTimer()
+    {
+        _timer += Time.deltaTime;
+        int m = Mathf.FloorToInt(_timer / 60);
+        int s = Mathf.FloorToInt(_timer % 60);
+        if (_timerText) _timerText.text = $"{m:00}:{s:00}";
+    }
+
+    private void HandleProgression()
+    {
+        if (_bossProgress < 1f)
+        {
+            _bossProgress += Time.deltaTime / 900f; 
+            if (_progressionBar) _progressionBar.value = _bossProgress;
+        }
+    }
+
+    public void OnOpenSettings() => SetPause(true, _settingsPopup);
+    public void OnOpenStatus() => SetPause(true, _statusPopup);
+    public void OnResume()
+    {
+        SetPause(false, _settingsPopup);
+        SetPause(false, _statusPopup);
+    }
+
+    private void SetPause(bool pause, GameObject popup)
+    {
+        _isPaused = pause;
+        Time.timeScale = pause ? 0 : 1;
+        if (popup) popup.SetActive(pause);
     }
 }

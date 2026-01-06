@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace SquadShooterMVP
-{
     public class EnemyDetector : MonoBehaviour
     {
         private SphereCollider _collider;
-        private List<EnemyPresenter> _detectedEnemies = new List<EnemyPresenter>();
+        public List<EnemyPresenter> _detectedEnemies = new List<EnemyPresenter>();
         public EnemyPresenter ClosestEnemy { get; private set; }
         public bool HasTarget => ClosestEnemy != null;
 
@@ -19,10 +17,10 @@ namespace SquadShooterMVP
             _collider.radius = radius;
         }
 
-        private void UpdateClosestEnemy()
+        public void UpdateClosestEnemy()
         {
             // 1. Clean up dead enemies or nulls from the list
-            _detectedEnemies.RemoveAll(x => x == null || x.IsDead());
+            _detectedEnemies.RemoveAll(x => x == null || x.GetComponent<UnitModel>().IsDead.Value);
 
             if (_detectedEnemies.Count == 0)
             {
@@ -53,13 +51,16 @@ namespace SquadShooterMVP
         private void OnTriggerEnter(Collider other)
         {
             EnemyPresenter enemy = other.GetComponentInParent<EnemyPresenter>();
-
             if (enemy != null)
             {
-                if (!_detectedEnemies.Contains(enemy) && !enemy.IsDead())
+                // Debug để sướng mắt
+                Debug.Log($"[Detector] Bắt được bộ phận: {other.name} của {enemy.name}");
+
+                // Kiểm tra logic cũ
+                var model = enemy.GetComponent<UnitModel>();
+                if (!_detectedEnemies.Contains(enemy) && (model != null && !model.IsDead.Value))
                 {
                     _detectedEnemies.Add(enemy);
-                    Debug.Log($"[EnemyDetector] Added: {enemy.name}");
                     UpdateClosestEnemy(); 
                 }
             }
@@ -72,8 +73,8 @@ namespace SquadShooterMVP
             if (enemy != null && _detectedEnemies.Contains(enemy))
             {
                 _detectedEnemies.Remove(enemy);
+                Debug.Log($"[EnemyDetector] Removed: {enemy.name}");
                 UpdateClosestEnemy();
             }
         }
     }
-}

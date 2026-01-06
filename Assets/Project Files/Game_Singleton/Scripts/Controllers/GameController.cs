@@ -80,7 +80,7 @@ namespace Watermelon
         {
             if (!isGameActive) return;
 
-            LevelData currentLevel = LevelController.CurrentLevelData;
+            Watermelon.LevelSystem.LevelData currentLevel = LevelController.CurrentLevelData;
 
             UIComplete completePage = UIController.GetPage<UIComplete>();
             completePage.SetData(ActiveRoom.CurrentWorldIndex + 1, ActiveRoom.CurrentLevelIndex + 1, currentLevel.GetCoinsReward(), currentLevel.XPAmount, currentLevel.GetCardsReward());

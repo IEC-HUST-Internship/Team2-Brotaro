@@ -1,38 +1,57 @@
 using UnityEngine;
+using System;
 
-namespace SquadShooterMVP
+public class EnemyPresenter : MonoBehaviour
 {
-    public class EnemyPresenter : BaseUnitPresenter
+    // --- SETUP ---
+    public UnitModel Model { get; private set; }
+    public UnitView View { get; private set; }
+    public StateMachine StateMachine { get; private set; }
+    
+    // Mục tiêu (Player)
+    public Transform Target { get; private set; }
+
+    // --- CONFIG ---
+    [Header("AI Settings")]
+    public float DetectRange = 10f; 
+    public float AttackRange = 1.5f; 
+    public float AttackCooldown = 1.5f; 
+
+    // --- STATES ---
+    public EnemyIdleState IdleState { get; private set; }
+    public EnemyChasingState ChaseState { get; private set; }
+    public EnemyAttackState AttackState { get; private set; }
+    public EnemyDeadState DeadState { get; private set; }
+
+    public void Init(UnitModel model, UnitView view, Transform target)
     {
-        private Transform _target;
+        Model = model;
+        View = view;
+        Target = target;
 
-        public void Init(UnitModel model, Transform target)
-        {
-            base.Setup(model);
-            _target = target;
-        }
+        // Setup State Machine
+        StateMachine = new StateMachine();
+        IdleState = new EnemyIdleState(this);
+        ChaseState = new EnemyChasingState(this);
+        AttackState = new EnemyAttackState(this);
+        DeadState = new EnemyDeadState(this);
 
-        protected override void HandleMovement()
-        {
-            if (_target == null) return;
-            if(Vector3.Distance(transform.position, _target.position) < 0.1f)
-            {
-                _movementView.Stop();
-                return;
-            }
-            Vector3 dir = (_target.position - transform.position).normalized;
-            _movementView.Move(dir, _model.MoveSpeed);
-            _movementView.Rotate(dir);
-        }
+        Model.IsDead.Subscribe(isDead => { if (isDead) StateMachine.ChangeState(DeadState);});
 
-        protected override void HandleShooting()
-        {
-            if (_target == null) return;
-            
-            if (Vector3.Distance(transform.position, _target.position) < 5f)
-            {
-                _shootingView.Shoot(_model.Damage, _model.FireRate);
-            }
-        }
+        StateMachine.ChangeState(IdleState);
+    }
+
+    private void Update()
+    {
+        if (Model == null) return; 
+        
+        StateMachine.Tick();
+    }
+    
+    public void TakeDamage(float amount)
+    {
+        if (Model.IsDead.Value) return;
+        Model.TakeDamage(amount);
+        //View.PlayGotHitAnim(); 
     }
 }

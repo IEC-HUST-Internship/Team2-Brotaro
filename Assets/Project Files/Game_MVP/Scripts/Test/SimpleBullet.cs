@@ -3,18 +3,39 @@ using SquadShooterMVP; // Use your namespace!
 
 public class SimpleBullet : MonoBehaviour
 {
-    public int Damage = 50;
-    void Update() { transform.Translate(Vector3.forward * 20f * Time.deltaTime); }
+[Header("Settings")]
+    [SerializeField] private float _speed = 20f;
+    [SerializeField] private float _lifeTime = 2f;    
 
-    void OnTriggerEnter(Collider other)
+    private float _damage;
+
+    public void Init(float damage)
     {
-        // Look for the SHARED BaseUnitPresenter
-        var unit = other.GetComponentInParent<BaseUnitPresenter>();
-        if (unit != null)
+        _damage = damage;
+        
+        Destroy(gameObject, _lifeTime);
+    }
+
+    private void Update()
+    {
+        transform.Translate(Vector3.forward * _speed * Time.deltaTime);
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+
+        var enemy = other.GetComponentInParent<EnemyPresenter>();
+
+        if (enemy != null)
         {
-            unit.TakeDamage(Damage);
-            Debug.Log("Bullet hit " + unit.name + " for " + Damage + " damage.");
-            Destroy(gameObject); 
+            enemy.TakeDamage(_damage);
+            
+            Destroy(gameObject);
+        }
+        else if (!other.CompareTag("Player") && !other.CompareTag("Bullet")) 
+        {
+            Destroy(gameObject);
         }
     }
 }

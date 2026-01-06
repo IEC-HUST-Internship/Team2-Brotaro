@@ -6,7 +6,7 @@ namespace SquadShooterMVP
     public class MVP_TestBootstrap : MonoBehaviour
     {
         [Header("System Prefabs")]
-        [SerializeField] private CharacterPresenter _playerPrefab;
+        [SerializeField] private PlayerPresenter _playerPrefab;
         [SerializeField] private EnemyPresenter _enemyPrefab;
 
         [Header("Scene References")]
@@ -14,7 +14,7 @@ namespace SquadShooterMVP
         [SerializeField] private MVP_CamControl _cameraController;
         
         // Private reference to the live player
-        private CharacterPresenter _activePlayer;
+        private PlayerPresenter _activePlayer;
 
         private void Start()
         {
@@ -24,11 +24,11 @@ namespace SquadShooterMVP
         private void StartGame()
         {
             // 1. Create Data
-            var playerModel = new UnitModel { MoveSpeed = 8f, Damage = 25, FireRate = 0.15f };
+            var playerModel = new UnitModel(8f, 0.15f, 25);
 
             // 2. Spawn Player at Center (0, 2, 0) to avoid floor issues
             _activePlayer = Instantiate(_playerPrefab, new Vector3(0, 2, 0), Quaternion.identity);
-            _activePlayer.Init(playerModel, _inputService);
+            _activePlayer.Init(playerModel, _activePlayer.GetComponent<UnitView>(), _inputService, (x, y) => { }, (x, y) => { }, (dmg) => { });
             if (_cameraController != null)
             {
                 _cameraController.SetTarget(_activePlayer.transform);
@@ -55,11 +55,11 @@ namespace SquadShooterMVP
             Vector3 spawnPos = _activePlayer.transform.position + new Vector3(randomCircle.x, 2f, randomCircle.y);
 
             // 2. Create Enemy Data
-            var enemyModel = new UnitModel { MoveSpeed = 3f, Damage = 10, FireRate = 1.0f };
+            var enemyModel = new UnitModel(3f, 1.0f, 10);
 
             // 3. Spawn & Init
             var enemy = Instantiate(_enemyPrefab, spawnPos, Quaternion.identity);
-            enemy.Init(enemyModel, _activePlayer.transform);
+            //enemy.Init(enemyModel, _activePlayer.transform);
         }
     }
 }
