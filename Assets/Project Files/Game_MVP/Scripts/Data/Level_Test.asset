@@ -16,7 +16,7 @@ MonoBehaviour:
   LevelDescription: 
   Waves:
   - WaveTimer: 60
-    EnemyCount: 5
-    SpawnInterval: 1
+    EnemyCount: 10
+    SpawnInterval: 0.5
     EnemyPrefab: {fileID: 9190460049904663832, guid: 1d5f76d94663cfa408f094aad1facf23,
       type: 3}

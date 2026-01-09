@@ -20,12 +20,9 @@ public class UnitView : MonoBehaviour
     private static readonly int DieHash = Animator.StringToHash("Die");
     private void Awake()
     {
-        // 1. Tự động tìm tất cả xương con bên trong
-        // (Lưu ý: Tìm trong Children nhưng trừ cái MainRb của cha ra)
         _ragdollRigidbodies = GetComponentsInChildren<Rigidbody>();
         _ragdollColliders = GetComponentsInChildren<Collider>();
 
-        // 2. Tắt Ragdoll ngay từ đầu (Phong ấn)
         ToggleRagdoll(false);
     }
     public void ToggleRagdoll(bool isRagdoll)
@@ -41,6 +38,7 @@ public class UnitView : MonoBehaviour
         foreach (var col in _ragdollColliders)
         {
             if (col == _mainCollider) continue; 
+            if (col.gameObject == this.gameObject) continue;
 
             col.enabled = isRagdoll; 
         }

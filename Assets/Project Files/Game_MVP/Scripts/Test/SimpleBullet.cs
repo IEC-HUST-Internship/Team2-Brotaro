@@ -1,5 +1,4 @@
 using UnityEngine;
-using SquadShooterMVP; // Use your namespace!
 
 public class SimpleBullet : MonoBehaviour
 {

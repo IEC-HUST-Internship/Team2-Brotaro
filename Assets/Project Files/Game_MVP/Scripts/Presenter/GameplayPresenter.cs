@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro; 
+using TMPro;
+using System.Collections;
 
 public class GameplayPresenter : MonoBehaviour
 {
@@ -15,7 +16,9 @@ public class GameplayPresenter : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _levelText;
     [SerializeField] private TextMeshProUGUI _timerText;
     [SerializeField] private Slider _progressionBar; 
-    
+    [Header("Game Over UI")]
+    [SerializeField] private GameObject _winScreen;
+    [SerializeField] private GameObject _losePopup;      
     [Header("Popups")]
     [SerializeField] private GameObject _settingsPopup;
     [SerializeField] private GameObject _statusPopup;
@@ -27,6 +30,7 @@ public class GameplayPresenter : MonoBehaviour
     private float _timer;
     private float _bossProgress;
     private bool _isPaused;
+    private bool _isGameOver;
 
     private void Start()
     {
@@ -57,9 +61,18 @@ public class GameplayPresenter : MonoBehaviour
         {
             Debug.LogWarning("Không tìm thấy script Camera Control trong Scene!");
         }
+        playerModel.IsDead.Subscribe(isDead => 
+        {
+            if (isDead)
+            {
+                StartCoroutine(LoseTimer());
+            }
+        });
         _isPaused = false;
         if(_settingsPopup) _settingsPopup.SetActive(false);
         if(_statusPopup) _statusPopup.SetActive(false);
+        if (_losePopup) _losePopup.SetActive(false);
+        if (_winScreen) _winScreen.SetActive(false);
 
         if(_wavePresenter != null && _levelData != null)
         {
@@ -121,11 +134,37 @@ public class GameplayPresenter : MonoBehaviour
         SetPause(false, _settingsPopup);
         SetPause(false, _statusPopup);
     }
-
     private void SetPause(bool pause, GameObject popup)
     {
         _isPaused = pause;
         Time.timeScale = pause ? 0 : 1;
         if (popup) popup.SetActive(pause);
+    }
+    public void LoseCondition()
+    {
+        Debug.Log("Game Over: Player Died");
+        _isGameOver = true;
+        
+        Time.timeScale = 0; 
+        
+        if (_losePopup) _losePopup.SetActive(true);
+    }
+    private IEnumerator LoseTimer()
+    {
+        yield return new WaitForSeconds(2f);
+        LoseCondition();
+    }
+    public void WinCondition()
+    {
+        if (_isGameOver) return;
+
+        Debug.Log("Level Cleared!");
+        _isGameOver = true;
+
+
+        if (_winScreen != null)
+        {
+            _winScreen.SetActive(true);
+        }
     }
 }

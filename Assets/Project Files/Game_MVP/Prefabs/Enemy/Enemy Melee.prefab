@@ -43,7 +43,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 31723260644882922}
   serializedVersion: 2
-  m_Mass: 1.25
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -362,7 +362,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 257725291610286037}
   serializedVersion: 2
-  m_Mass: 3.125
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -553,7 +553,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1141204067172061495}
   serializedVersion: 2
-  m_Mass: 3.125
+  m_Mass: 6
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1476,7 +1476,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4876961932167043034}
-  - component: {fileID: 1535269926721719712}
   m_Layer: 9
   m_Name: MeeleMan (1)
   m_TagString: Untagged
@@ -1501,27 +1500,6 @@ Transform:
   m_Father: {fileID: 9190460049904663836}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &1535269926721719712
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5252784470122761568}
-  m_Enabled: 1
-  m_Avatar: {fileID: 9000000, guid: d8c934913d61f4c4f83d22799dce38da, type: 3}
-  m_Controller: {fileID: 9100000, guid: a62f9a3788d6790499db8e18244369ed, type: 2}
-  m_CullingMode: 1
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5383931487810307677
 GameObject:
   m_ObjectHideFlags: 0
@@ -1662,7 +1640,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6135826190577689918}
   serializedVersion: 2
-  m_Mass: 1.875
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -1964,7 +1942,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7066861969972161122}
   serializedVersion: 2
-  m_Mass: 1.875
+  m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -2188,7 +2166,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7619053030518936814}
   serializedVersion: 2
-  m_Mass: 1.25
+  m_Mass: 2
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
@@ -2833,9 +2811,11 @@ GameObject:
   m_Component:
   - component: {fileID: 9190460049904663836}
   - component: {fileID: 9190460049904663838}
+  - component: {fileID: 707844289986202005}
   - component: {fileID: 9190460049904663839}
   - component: {fileID: 7913931559105972214}
   - component: {fileID: 7863236031378747312}
+  - component: {fileID: 3566359687358302700}
   m_Layer: 9
   m_Name: Enemy Melee
   m_TagString: Enemy
@@ -2873,6 +2853,20 @@ CapsuleCollider:
   m_Height: 2.09375
   m_Direction: 1
   m_Center: {x: 0, y: 1.1, z: 0}
+--- !u!136 &707844289986202005
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9190460049904663832}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 1.1, z: 0}
 --- !u!54 &9190460049904663839
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2881,7 +2875,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9190460049904663832}
   serializedVersion: 2
-  m_Mass: 1
+  m_Mass: 8
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 1
@@ -2903,7 +2897,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _mainRb: {fileID: 9190460049904663839}
   _mainCollider: {fileID: 9190460049904663838}
-  _animator: {fileID: 1535269926721719712}
+  _animator: {fileID: 3566359687358302700}
   _renderer: {fileID: 693566795927408455}
   _rotationSpeed: 10
 --- !u!114 &7863236031378747312
@@ -2919,5 +2913,26 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DetectRange: 10
-  AttackRange: 1.5
-  AttackCooldown: 1.5
+  AttackRange: 2
+  AttackCooldown: 1
+--- !u!95 &3566359687358302700
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9190460049904663832}
+  m_Enabled: 1
+  m_Avatar: {fileID: 9000000, guid: d8c934913d61f4c4f83d22799dce38da, type: 3}
+  m_Controller: {fileID: 9100000, guid: a62f9a3788d6790499db8e18244369ed, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

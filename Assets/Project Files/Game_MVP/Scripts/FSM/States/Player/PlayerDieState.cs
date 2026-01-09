@@ -19,8 +19,11 @@ public class PlayerDieState : IState
 
     public void Tick()
     {
-        // Chờ cho đến khi animation chết kết thúc (có thể dùng sự kiện animation để làm việc này)
-        
+        GameplayPresenter gameplayPresenter = Object.FindObjectOfType<GameplayPresenter>();
+        if (gameplayPresenter != null)
+        {
+            gameplayPresenter.LoseCondition();
+        }
     }
 
     public void Exit()

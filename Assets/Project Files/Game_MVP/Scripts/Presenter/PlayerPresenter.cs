@@ -30,8 +30,12 @@ public class PlayerPresenter : MonoBehaviour
         View = view;
         InputService = input;
 
-        EnemyDetector = GetComponentInChildren<EnemyDetector>();
-        if (!EnemyDetector) EnemyDetector = gameObject.AddComponent<EnemyDetector>();
+        EnemyDetector = GetComponentInChildren<EnemyDetector>();  
+        if (!EnemyDetector)
+        {
+            Debug.LogError("EnemyDetector component not found in children!");
+            return;
+        }
         EnemyDetector.Init(AttackRange);
 
         _aimRingInstance = Instantiate(_aimRingPrefab, transform);
@@ -77,7 +81,7 @@ public class PlayerPresenter : MonoBehaviour
             Quaternion rotation = Quaternion.LookRotation(direction);
 
             var bulletObj = Instantiate(Bullet, transform.position + Vector3.up * 1.0f, rotation);
-            bulletObj.GetComponent<SimpleBullet>().Init(50f);
+            bulletObj.GetComponent<SimpleBullet>().Init(10f);
             Debug.Log("Pew Pew!");
         }
     }

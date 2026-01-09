@@ -20,7 +20,7 @@ using UnityEngine;
         public void UpdateClosestEnemy()
         {
             // 1. Clean up dead enemies or nulls from the list
-            _detectedEnemies.RemoveAll(x => x == null || x.GetComponent<UnitModel>().IsDead.Value);
+            _detectedEnemies.RemoveAll(x => x == null || x.GetComponent<EnemyPresenter>().Model.IsDead.Value);
 
             if (_detectedEnemies.Count == 0)
             {
@@ -50,15 +50,16 @@ using UnityEngine;
 
         private void OnTriggerEnter(Collider other)
         {
-            EnemyPresenter enemy = other.GetComponentInParent<EnemyPresenter>();
+            EnemyPresenter enemy = other.GetComponent<EnemyPresenter>();
+            if(!enemy)
+            {
+                Debug.Log("Here is not enemy");
+            }
             if (enemy != null)
             {
-                // Debug để sướng mắt
                 Debug.Log($"[Detector] Bắt được bộ phận: {other.name} của {enemy.name}");
-
-                // Kiểm tra logic cũ
-                var model = enemy.GetComponent<UnitModel>();
-                if (!_detectedEnemies.Contains(enemy) && (model != null && !model.IsDead.Value))
+                var model = enemy.GetComponent<EnemyPresenter>().Model;
+                if (!_detectedEnemies.Contains(enemy) && model != null && !model.IsDead.Value)
                 {
                     _detectedEnemies.Add(enemy);
                     UpdateClosestEnemy(); 
